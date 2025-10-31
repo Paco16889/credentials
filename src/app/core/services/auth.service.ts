@@ -76,7 +76,20 @@ export class AuthService {
      return true;
   }
 
-  logout(){
+
+   checkUser(credentials: Credentials){
+    const users: User[] = JSON.parse(localStorage.getItem('USERS') || '[]');
+
+    if (!users.find(u => u.email === credentials.email)) {
+      
+      return false;
+   }
+   return true;
+  }
+
+
+
+   logout(){
     localStorage.removeItem('AUTHENTICATION');
     this.user.set(null);
   }

@@ -13,8 +13,8 @@ import { CommonModule } from '@angular/common';
 export class RegisterComponent {
 
   formRegister;
-  registrationError = '';
-  registrationSuccess = false;
+  registrationError : string = '';
+  registrationSuccess: boolean = false;
 
   constructor(private fb: FormBuilder, private auth: AuthService, private router: Router){
     // Creamos el formulario reactivo con validaciones
@@ -22,7 +22,7 @@ export class RegisterComponent {
       name: ['', Validators.required],
       surname: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(12)]]
+      password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)]]
     });
   }
 
@@ -47,20 +47,30 @@ export class RegisterComponent {
     this.registrationError = '';
     this.formRegister.reset();
 
-    // Opcional: redirigir al login después de unos segundos
-    setTimeout(() => this.router.navigate(['/login']), 2000);
+  //this.router.navigate(['/dashboard']) no lleva al dashboard mriar autoguards y service
+    this.router.navigate(['/login']);
   }
 
-  getError(control: string): string {
-    const c = this.formRegister.get(control);
-    if (!c || !c.errors) return '';
-
-    if (c.errors['required']) return 'Campo obligatorio';
-    if (c.errors['email']) return 'Email inválido';
-    if (c.errors['minlength']) return `Mínimo ${c.errors['minlength'].requiredLength} caracteres`;
-    if (c.errors['maxlength']) return `Máximo ${c.errors['maxlength'].requiredLength} caracteres`;
-
-    return '';
+ getError(control:string){
+       
+    switch(control){
+      case 'email':
+        if(this.formRegister.controls.email.errors!=null && 
+           Object.keys(this.formRegister.controls.email.errors).includes('required'))
+           return "El campo email es requerido";
+        else if(this.formRegister.controls.email.errors!=null && 
+           Object.keys(this.formRegister.controls.email.errors).includes('email'))
+           return "El email no es correcto";
+        
+        break;
+      case 'password': 
+        if(this.formRegister.controls.password.errors!=null && 
+           Object.keys(this.formRegister.controls.password.errors).includes('required'))
+           return "El campo email es requerido";
+        break;
+      default:return "";
+    }
+    return "";
   }
 
 }

@@ -103,6 +103,18 @@
             </span>
         }
       </div>
+      
+      @if(loginAttempted && userNotFound){
+        <div class="text-center mb-2">
+          <p class="text-red-500 mt-3 mix-blend-color-dodge">Usuario no Resgistrado</p>
+          <a (click)="onRegister()" class="text-red-500 mt-3 mix-blend-color-dodge">Registrate Ahora!!</a>
+
+        </div>
+      }
+        
+      
+      
+      
       <button
         class="rounded-sm mb-3 w-full px-4 py-2 font-medium bg-blue-500 hover:bg-blue-600 border border-blue-400 text-white"
         type="submit"
