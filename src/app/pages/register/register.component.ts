@@ -1,9 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService, User } from '../../core/services/auth.service';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
+
+ function passwordMatches(control:AbstractControl):ValidationErrors | null {
+  const group:FormGroup = control as FormGroup;
+  if (group.controls['password'].value != group.controls['confirmPassword'].value) {
+    group.controls['confirmPassword'].setErrors({'passwordMatch': null});
+    return {'passwordMatch':null};
+  }
+  
+  
+  return null;
+  }
 @Component({
   selector: 'app-register',
   imports: [ReactiveFormsModule, CommonModule],
@@ -12,18 +23,27 @@ import { CommonModule } from '@angular/common';
 })
 export class RegisterComponent {
 
-  formRegister;
+  formRegister: FormGroup;
   registrationError : string = '';
   registrationSuccess: boolean = false;
+  builder: FormBuilder = inject(FormBuilder);
+  auth: AuthService = inject(AuthService);
+  router:Router = inject(Router);
+  navigateTo:string = "";
 
-  constructor(private fb: FormBuilder, private auth: AuthService, private router: Router){
+ 
+  error;
+  constructor(){
     // Creamos el formulario reactivo con validaciones
-    this.formRegister = this.fb.group({
-      name: ['', Validators.required],
-      surname: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)]]
-    });
+    this.formRegister = this.builder.group({
+      'name': ['', [Validators.required, Validators.minLength(3)]],
+      'surname': ['', [Validators.required, Validators.minLength(3)]],
+      'email': ['', [Validators.required, Validators.email]],
+      'password': ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)]],
+      'confirmPassword':['',[Validators.required]]
+    },{validators:[passwordMatches]});
+    this.navigateTo = this.router.getCurrentNavigation()?.extras.state?.['navigateTo']||'dashboard';
+    this.error = signal(false);
   }
 
   onSubmit() {
