@@ -46,7 +46,20 @@ export class RegisterComponent {
     this.error = signal(false);
   }
 
-  onSubmit() {
+  async onSubmitt(){
+     try{
+      await this.auth.register(this.formRegister.value);
+      this.router.navigate([this.navigateTo]);
+    }
+    catch(error){
+      
+    }
+  }
+
+  
+ onSubmit() {
+
+   
     if (this.formRegister.invalid) {
       this.registrationError = 'Por favor, corrige los errores del formulario';
       return;
@@ -75,18 +88,44 @@ export class RegisterComponent {
        
     switch(control){
       case 'email':
-        if(this.formRegister.controls.email.errors!=null && 
-           Object.keys(this.formRegister.controls.email.errors).includes('required'))
+        if(this.formRegister.controls['email'].errors!=null && 
+           Object.keys(this.formRegister.controls['email'].errors).includes('required'))
            return "El campo email es requerido";
-        else if(this.formRegister.controls.email.errors!=null && 
-           Object.keys(this.formRegister.controls.email.errors).includes('email'))
+        else if(this.formRegister.controls['email'].errors!=null && 
+           Object.keys(this.formRegister.controls['email'].errors).includes('email'))
            return "El email no es correcto";
         
         break;
+        case 'name':
+        if(this.formRegister.controls['name'].errors!=null && 
+           Object.keys(this.formRegister.controls['name'].errors).includes('required'))
+           return "El campo nombre es requerido";
+        else if(this.formRegister.controls['name'].errors!=null && 
+           Object.keys(this.formRegister.controls['name'].errors).includes('minlength'))
+           return "Debe introducir al menos 3 caracteres";
+        
+        break;
+        case 'surname':
+        if(this.formRegister.controls['surname'].errors!=null && 
+           Object.keys(this.formRegister.controls['surname'].errors).includes('required'))
+           return "El campo apellidos es requerido";
+        else if(this.formRegister.controls['surname'].errors!=null && 
+           Object.keys(this.formRegister.controls['surname'].errors).includes('minlength'))
+           return "Debe introducir al menos 3 caracteres";
+        
+        break;
       case 'password': 
-        if(this.formRegister.controls.password.errors!=null && 
-           Object.keys(this.formRegister.controls.password.errors).includes('required'))
+        if(this.formRegister.controls['password'].errors!=null && 
+           Object.keys(this.formRegister.controls['password'].errors).includes('required'))
            return "El campo email es requerido";
+        break;
+        case 'confirmPassword': 
+        if(this.formRegister.controls['confirmPassword'].errors!=null && 
+           Object.keys(this.formRegister.controls['confirmPassword'].errors).includes('required'))
+           return "El campo password es requerido";
+        if(this.formRegister.controls['confirmPassword'].errors!=null && 
+           Object.keys(this.formRegister.controls['confirmPassword'].errors).includes('passwordMatch'))
+           return "Las contranseñas no coinciden";
         break;
       default:return "";
     }
