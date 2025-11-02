@@ -1,3 +1,4 @@
+//esta rama sera igual que la main pero añaiendo las mejoras de JuanA el viernes 31
 import { Injectable, signal } from '@angular/core';
 import { Credentials } from '../models/credentials';
 
