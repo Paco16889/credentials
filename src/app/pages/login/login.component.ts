@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
@@ -11,20 +11,24 @@ import { Router } from '@angular/router';
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
-
+  error;
   formLogin;
+  private router:Router = inject(Router);
+  readonly navigateTo:string = "";
   loginAttempted: boolean = false;
   userNotFound: boolean = false; 
 
   //Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/)]
   constructor(private formSvc:FormBuilder,
     private auth:AuthService,
-    private router:Router
+    
   ){
     this.formLogin = this.formSvc.group({
       'email':['', [Validators.required, Validators.email]],
       'password':['', [Validators.required]],
     });
+    this.error = signal(false);
+    this.navigateTo = this.router.getCurrentNavigation()?.extras.state?.['navigateTo'] || '/dashboard';
   }
 
   /*userExists() {
@@ -36,6 +40,14 @@ export class LoginComponent {
     }  
   }*/
   
+    async onSubmic(){
+      console.log(this.formLogin.value);
+      try{
+        this.error.set(false);
+        const response = await this.auth.login(this.formLogin.value as any);
+        this.router.navigate([this.navigateTo]);
+      }
+    }
   onRegister(){
     
     this.router.navigate(['/register']);

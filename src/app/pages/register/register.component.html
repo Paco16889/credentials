@@ -8,8 +8,8 @@
       <!-- Nombre -->
       <div class="mb-3">
         <label class="block text-white">Nombre</label>
-        <input formControlName="name" placeholder="Tu nombre" class="px-3 h-8 w-full rounded-sm border" type="text" />
-        @if(formRegister.controls.name.touched && formRegister.controls.name.errors){
+        <input id="name" name="name" autocomplete="given-name" formControlName="name" placeholder="Tu nombre" class="px-3 h-8 w-full rounded-sm border" type="text" />
+        @if(formRegister.controls['name'].touched && formRegister.controls['name'].errors){
             <span class="text-red-500 text-sm">{{ getError('name') }}</span>
         }
         
@@ -17,9 +17,9 @@
 
       <!-- Nickname / Surname -->
       <div class="mb-3">
-        <label class="block text-white">Nickname</label>
-        <input formControlName="surname" placeholder="Tu nickname" class="px-3 h-8 w-full rounded-sm border" type="text" />
-        @if(formRegister.controls.surname.touched && formRegister.controls.surname.errors){
+        <label class="block text-white">Apellido</label>
+        <input id="surname" name="surname" autocomplete="family-name" formControlName="surname" placeholder="Tu apellido" class="px-3 h-8 w-full rounded-sm border" type="text" />
+        @if(formRegister.controls['surname'].touched && formRegister.controls['surname'].errors){
           <span class="text-red-500 text-sm">{{ getError('surname') }}</span>
       }
       </div>
@@ -27,8 +27,8 @@
       <!-- Email -->
       <div class="mb-3">
         <label class="block text-white">Email</label>
-        <input formControlName="email" placeholder="tu@email.com" class="px-3 h-8 w-full rounded-sm border" type="email" />
-        @if(formRegister.controls.email.touched && formRegister.controls.email.errors){
+        <input id="email" name="email" placeholder="tu@email.com" autocomplete="username" class="px-3 h-8 w-full rounded-sm border" type="email" />
+        @if(formRegister.controls['email'].touched && formRegister.controls['email'].errors){
           <span class="text-red-500 text-sm">{{ getError('email') }}</span>
       }
       </div>
@@ -36,9 +36,17 @@
       <!-- Contraseña -->
       <div class="mb-3">
         <label class="block text-white">Contraseña</label>
-        <input formControlName="password" placeholder="Tu contraseña" class="px-3 h-8 w-full rounded-sm border" type="password" />
-        @if(formRegister.controls.password.touched && formRegister.controls.password.errors){
+        <input id="password" name="password" formControlName="password" autocomplete="new-password" placeholder="Tu contraseña" class="px-3 h-8 w-full rounded-sm border" type="password" />
+        @if(formRegister.controls['password'].touched && formRegister.controls['password'].errors){
           <span class="text-red-500 text-sm">{{ getError('password') }}</span>
+      }
+      </div>
+
+      <div class="mb-3">
+        <label class="block text-white">Contraseña</label>
+        <input id="confirmPassword" name="confirmPassword" formControlName="confirmPassword" autocomplete="new-password" placeholder="tu contraseña" class="px-3 h-8 w-full rounded-sm border" type="password" />
+        @if(formRegister.controls['confirmPassword'].touched && formRegister.controls['confirmPassword'].errors){
+          <span class="text-red-500 text-sm">{{ getError('confirmPassword') }}</span>
       }
       </div>
 
